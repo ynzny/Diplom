@@ -1,5 +1,8 @@
 # Diplom
 
+https://ynzny.github.io/Diplom/
+
+
 https://docs.google.com/spreadsheets/d/1TFTt4yqkEldgE1iiHkWt7YAEh3REeNUQomrq0uBx4qU/edit?usp=sharing
 
 
