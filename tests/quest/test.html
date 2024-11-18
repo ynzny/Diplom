@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тест пользователя</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+    .question {
+      margin: 20px 0;
+      display: none;
+    }
+    #counter {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    #results {
+      margin-top: 30px;
+      display: none;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <h1>Пройди тест и узнай свои качества</h1>
+
+  <div id="test">
+    <div id="counter">Вопрос 1 из 6</div>
+    <div class="question" id="question1">
+      <p>Как бы вы оценили свою внимательность (1-10)?</p>
+      <input type="number" id="attentiveness" min="1" max="10">
+      <button onclick="nextQuestion(1)">Далее</button>
+    </div>
+    <div class="question" id="question2">
+      <p>Как бы вы оценили свою скорость (1-10)?</p>
+      <input type="number" id="speed" min="1" max="10">
+      <button onclick="nextQuestion(2)">Далее</button>
+    </div>
+    <div class="question" id="question3">
+      <p>Как бы вы оценили свою креативность (1-10)?</p>
+      <input type="number" id="creativity" min="1" max="10">
+      <button onclick="nextQuestion(3)">Далее</button>
+    </div>
+    <div class="question" id="question4">
+      <p>Как бы вы оценили свою решительность (1-10)?</p>
+      <input type="number" id="decisiveness" min="1" max="10">
+      <button onclick="nextQuestion(4)">Далее</button>
+    </div>
+    <div class="question" id="question5">
+      <p>Как бы вы оценили свою ответственность (1-10)?</p>
+      <input type="number" id="responsibility" min="1" max="10">
+      <button onclick="nextQuestion(5)">Далее</button>
+    </div>
+    <div class="question" id="question6">
+      <p>Как бы вы оценили свою стрессоустойчивость (1-10)?</p>
+      <input type="number" id="stress_resistance" min="1" max="10">
+      <button onclick="showResults()">Показать результаты</button>
+    </div>
+  </div>
+
+  <div id="results">
+    <h2>Ваши качества:</h2>
+    <canvas id="qualitiesChart" width="400" height="400"></canvas>
+  </div>
+
+  <script>
+    // Показать первый вопрос и установить начальный счётчик
+    document.getElementById('question1').style.display = 'block';
+
+    function updateCounter(currentQuestion) {
+      document.getElementById('counter').textContent = `Вопрос ${currentQuestion} из 6`;
+    }
+
+    function nextQuestion(currentQuestion) {
+      const questionInput = document.querySelector(`#question${currentQuestion} input`);
+      const answer = questionInput.value;
+
+      if (!answer || answer < 1 || answer > 10) {
+        alert('Пожалуйста, дайте оценку от 1 до 10.');
+        return;
+      }
+
+      // Скрыть текущий вопрос и показать следующий
+      document.getElementById(`question${currentQuestion}`).style.display = 'none';
+      document.getElementById(`question${currentQuestion + 1}`).style.display = 'block';
+      updateCounter(currentQuestion + 1);
+    }
+
+    function showResults() {
+      const attentiveness = document.getElementById('attentiveness').value;
+      const speed = document.getElementById('speed').value;
+      const creativity = document.getElementById('creativity').value;
+      const decisiveness = document.getElementById('decisiveness').value;
+      const responsibility = document.getElementById('responsibility').value;
+      const stressResistance = document.getElementById('stress_resistance').value;
+
+      // Проверить, что все значения заполнены
+      const qualities = [attentiveness, speed, creativity, decisiveness, responsibility, stressResistance];
+      if (qualities.some(q => !q)) {
+        alert('Пожалуйста, ответьте на все вопросы.');
+        return;
+      }
+
+      // Скрыть тест и показать результаты
+      document.getElementById('test').style.display = 'none';
+      document.getElementById('results').style.display = 'block';
+
+      // Создать круговую диаграмму
+      const ctx = document.getElementById('qualitiesChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Внимательность', 'Скорость', 'Креативность', 'Решительность', 'Ответственность', 'Стрессоустойчивость'],
+            datasets: [{
+            data: qualities,
+            backgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+            borderColor: '#FFFFFF',
+            borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+            legend: {
+                position: 'right',
+                labels: {
+                font: {
+                    size: 16,
+                    family: 'Arial',
+                },
+                color: '#333'
+                }
+            },
+            datalabels: {
+                color: '#fff',
+                font: {
+                weight: 'bold',
+                size: 14
+                },
+                formatter: (value) => `${value} баллов`
+            }
+            }
+        }
+        });
+    }
+  </script>
+
+</body>
+</html>
